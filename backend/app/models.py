@@ -18,15 +18,12 @@ class User(db.Model):
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(200))
-    status = db.Column(db.Enum("Todo", "In-Progress", "Completed"), default="Todo")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    description = db.Column(db.Text)
+    status = db.Column(
+        db.Enum("Todo", "In-Progress", "Completed", name="task_status"), default="Todo"
     )
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey("task.id"))
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-
     children = db.relationship("Task", backref=db.backref("parent", remote_side=[id]))
 
     def to_dict(self):
@@ -35,9 +32,6 @@ class Task(db.Model):
             "title": self.title,
             "description": self.description,
             "status": self.status,
-            "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat(),
-            "parent_id": self.parent_id,
             "user_id": self.user_id,
-            "children": [child.to_dict() for child in self.children],
+            "parent_id": self.parent_id,
         }

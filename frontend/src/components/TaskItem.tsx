@@ -7,6 +7,8 @@ interface Task {
     description: string;
     status: "Todo" | "In-Progress" | "Completed";
     children: Task[];
+    parent_id: number | null;
+    depth: number;
 }
 
 interface TaskItemProps {
@@ -14,24 +16,37 @@ interface TaskItemProps {
     index: number;
     onUpdate: (task: Task) => void;
     onDelete: (id: number) => void;
+    onAddSubtask: (title: string, description: string) => void;
+    depth: number;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({
+export default function TaskItem({
     task,
     index,
     onUpdate,
     onDelete,
-}) => {
+    onAddSubtask,
+    depth,
+}: TaskItemProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTask, setEditedTask] = useState(task);
-
-    if (!task || typeof task.id === "undefined") {
-        return null;
-    }
+    const [showAddSubtask, setShowAddSubtask] = useState(false);
+    const [newSubtask, setNewSubtask] = useState({
+        title: "",
+        description: "",
+    });
 
     const handleUpdate = () => {
         onUpdate(editedTask);
         setIsEditing(false);
+    };
+
+    const handleAddSubtask = () => {
+        if (depth < 2 && newSubtask.title.trim() !== "") {
+            onAddSubtask(newSubtask.title, newSubtask.description);
+            setNewSubtask({ title: "", description: "" });
+            setShowAddSubtask(false);
+        }
     };
 
     return (
@@ -41,88 +56,163 @@ const TaskItem: React.FC<TaskItemProps> = ({
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className="task-item"
+                    className="mb-4 p-4 bg-white shadow-md rounded-lg task-item"
                 >
                     {isEditing ? (
-                        <div>
+                        <div className="space-y-2">
                             <input
                                 type="text"
                                 value={editedTask.title}
-                                onChange={(e) =>
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) =>
                                     setEditedTask({
                                         ...editedTask,
                                         title: e.target.value,
                                     })
                                 }
+                                className="w-full p-2 border rounded mb-2"
                             />
                             <input
                                 type="text"
                                 value={editedTask.description}
-                                onChange={(e) =>
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) =>
                                     setEditedTask({
                                         ...editedTask,
                                         description: e.target.value,
                                     })
                                 }
+                                className="w-full p-2 border rounded mb-2"
                             />
                             <select
                                 value={editedTask.status}
-                                onChange={(e) =>
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLSelectElement>
+                                ) =>
                                     setEditedTask({
                                         ...editedTask,
                                         status: e.target
                                             .value as Task["status"],
                                     })
                                 }
+                                className="w-full p-2 border rounded mb-2"
                             >
                                 <option value="Todo">Todo</option>
                                 <option value="In-Progress">In Progress</option>
                                 <option value="Completed">Completed</option>
                             </select>
-                            <button onClick={handleUpdate}>Save</button>
-                            <button onClick={() => setIsEditing(false)}>
+                            <button
+                                onClick={handleUpdate}
+                                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mr-2"
+                            >
+                                Save
+                            </button>
+                            <button
+                                onClick={() => setIsEditing(false)}
+                                className="bg-gray-300 text-black p-2 rounded hover:bg-gray-400"
+                            >
                                 Cancel
                             </button>
                         </div>
                     ) : (
                         <div>
-                            <h3>{task.title}</h3>
-                            <p>{task.description}</p>
-                            <p>
+                            <h3 className="text-lg font-semibold mb-2">
+                                {task.title}
+                            </h3>
+                            <p className="text-gray-600 mb-2">
+                                {task.description}
+                            </p>
+                            <p className="mb-2">
                                 Status:{" "}
                                 <span
-                                    className={`task-status status-${task.status.toLowerCase()}`}
+                                    className={`inline-block px-2 py-1 rounded text-white ${
+                                        task.status === "Todo"
+                                            ? "bg-blue-500"
+                                            : task.status === "In-Progress"
+                                            ? "bg-yellow-500"
+                                            : "bg-green-500"
+                                    }`}
                                 >
                                     {task.status}
                                 </span>
                             </p>
-                            <div className="task-controls">
-                                <button onClick={() => setIsEditing(true)}>
+                            <p className="mb-2">Depth: {depth}</p>
+                            <p className="mb-4">
+                                Parent ID:{" "}
+                                {task.parent_id !== null
+                                    ? task.parent_id
+                                    : "None"}
+                            </p>
+                            <div className="space-x-2">
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
+                                >
                                     Edit
                                 </button>
-                                <button onClick={() => onDelete(task.id)}>
+                                <button
+                                    onClick={() => onDelete(task.id)}
+                                    className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
+                                >
                                     Delete
                                 </button>
+                                {depth < 2 && (
+                                    <button
+                                        onClick={() =>
+                                            setShowAddSubtask(!showAddSubtask)
+                                        }
+                                        className="bg-green-500 text-white p-2 rounded hover:bg-green-600"
+                                    >
+                                        {showAddSubtask
+                                            ? "Cancel"
+                                            : "Add Subtask"}
+                                    </button>
+                                )}
                             </div>
                         </div>
                     )}
-                    {task.children && task.children.length > 0 && (
-                        <div className="subtasks">
-                            {task.children.map((subtask, subtaskIndex) => (
-                                <TaskItem
-                                    key={subtask.id}
-                                    task={subtask}
-                                    index={subtaskIndex}
-                                    onUpdate={onUpdate}
-                                    onDelete={onDelete}
-                                />
-                            ))}
+                    {showAddSubtask && (
+                        <div className="mt-4 space-y-2">
+                            <input
+                                type="text"
+                                placeholder="Subtask title"
+                                value={newSubtask.title}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) =>
+                                    setNewSubtask({
+                                        ...newSubtask,
+                                        title: e.target.value,
+                                    })
+                                }
+                                className="w-full p-2 border rounded mb-2"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Subtask description"
+                                value={newSubtask.description}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) =>
+                                    setNewSubtask({
+                                        ...newSubtask,
+                                        description: e.target.value,
+                                    })
+                                }
+                                className="w-full p-2 border rounded mb-2"
+                            />
+                            <button
+                                onClick={handleAddSubtask}
+                                className="bg-green-500 text-white p-2 rounded hover:bg-green-600"
+                            >
+                                Add Subtask
+                            </button>
                         </div>
                     )}
                 </div>
             )}
         </Draggable>
     );
-};
-
-export default TaskItem;
+}
