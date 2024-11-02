@@ -1,13 +1,18 @@
-from app import db
+from app import db, bcrypt
 from datetime import datetime
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
+    password = db.Column(db.String(128))
     tasks = db.relationship("Task", backref="owner", lazy="dynamic")
+
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password).decode("utf-8")
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
 
 
 class Task(db.Model):

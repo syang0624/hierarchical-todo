@@ -3,33 +3,24 @@ from app.models import User
 from app import db
 from flask_jwt_extended import create_access_token
 
-main = Blueprint("main", __name__)
+auth = Blueprint("auth", __name__)
 
 
-@main.route("/signup", methods=["POST"])
+@auth.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
-
-    username = data.get("username")
     email = data.get("email")
     password = data.get("password")
-
-    if User.query.filter_by(username=username).first():
-        return jsonify({"message": "Username already exists"}), 400
-
     if User.query.filter_by(email=email).first():
         return jsonify({"message": "Email already exists"}), 400
-
-    new_user = User(username=username, email=email)
+    new_user = User(email=email)
     new_user.set_password(password)
-
     db.session.add(new_user)
     db.session.commit()
-
     return jsonify({"message": "User created successfully"}), 201
 
 
-@main.route("/login", methods=["POST"])
+@auth.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
 
