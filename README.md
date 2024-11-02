@@ -2,6 +2,8 @@
 
 A full-stack todo application that supports hierarchical tasks with drag-and-drop functionality. Built with React (Frontend) and Flask (Backend).
 
+[[Watch the demo video]](https://www.loom.com/share/13ae507ad70f4c1b892a8353945a1d70?sid=4505d6fd-586a-4afe-a412-e78781528301)
+
 ## Features
 
 -   User authentication (login/signup)
