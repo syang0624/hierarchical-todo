@@ -46,35 +46,33 @@ source venv/bin/activate # On Windows use venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables:
-   Create a `.env` file in the backend directory with:
-   FLASK_APP=run.py
-   FLASK_ENV=development
-   SECRET_KEY=your-secret-key
-   DATABASE_URL=sqlite:///app.db
+4. Run the development server:
 
-5. Initialize the database:
-   flask db upgrade
-
-6. Run the development server:
-   python run.py
+```
+python run.py
+```
 
 The backend server will start at `http://127.0.0.1:5000`
 
 ## Frontend Setup
 
 1. Navigate to the frontend directory:
-   cd frontend
+
+```
+cd frontend
+```
 
 2. Install dependencies:
-   npm install
 
-3. Set up environment variables:
-   Create a `.env` file in the frontend directory with:
-   REACT_APP_API_URL=[http://127.0.0.1:5000](http://127.0.0.1:5000)
+```
+npm install
+```
 
-4. Start the development server:
-   npm start
+3. Start the development server:
+
+```
+npm start
+```
 
 The frontend application will start at `http://localhost:3000`
 
@@ -105,7 +103,3 @@ The frontend application will start at `http://localhost:3000`
 
 -   Delete the existing database file and run migrations again
 -   Check database connection string in environment variables
-
-## License
-
-This project is licensed under the MIT License.
