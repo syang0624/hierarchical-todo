@@ -1,76 +1,171 @@
 .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.app-nav {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    height: 100vh;
-    background-color: #f0f2f5;
+    margin-bottom: 20px;
 }
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
 .form-container {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
     max-width: 400px;
+    margin: 0 auto;
 }
+
 .tabs {
     display: flex;
-    margin-bottom: 1rem;
+    margin-bottom: 20px;
 }
+
 .tab {
     flex: 1;
-    padding: 0.5rem;
+    padding: 10px;
     border: none;
-    background-color: transparent;
+    background-color: #f0f0f0;
     cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #65676b;
 }
+
 .tab.active {
-    color: #1877f2;
-    border-bottom: 2px solid #1877f2;
+    background-color: #007bff;
+    color: white;
 }
+
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 15px;
 }
-label {
+
+.form-group label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
+    margin-bottom: 5px;
 }
-input {
+
+.form-group input {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #dddfe2;
+    padding: 8px;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 1rem;
 }
+
 .submit-btn {
     width: 100%;
-    padding: 0.75rem;
-    background-color: #1877f2;
+    padding: 10px;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
-    font-size: 1.1rem;
-    font-weight: bold;
     cursor: pointer;
 }
-.submit-btn:hover {
-    background-color: #166fe5;
-}
+
 .message {
-    margin-top: 1rem;
-    padding: 0.75rem;
+    margin-top: 15px;
+    padding: 10px;
     border-radius: 4px;
-    text-align: center;
 }
+
 .success {
-    background-color: #e6f3e6;
-    color: #2e7d32;
+    background-color: #d4edda;
+    color: #155724;
 }
+
 .error {
-    background-color: #fdeded;
-    color: #d32f2f;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.task-list {
+    margin-top: 20px;
+}
+
+.add-task-form {
+    margin-bottom: 20px;
+}
+
+.add-task-form input {
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.task-columns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-column {
+    flex: 1;
+    margin: 0 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.task-item {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-controls {
+    margin-top: 10px;
+}
+
+.task-controls button {
+    margin-right: 10px;
+}
+
+.task-status {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.status-todo {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.status-in-progress {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.status-completed {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.subtasks {
+    margin-left: 20px;
+    border-left: 2px solid #007bff;
+    padding-left: 10px;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
 }
