@@ -20,8 +20,8 @@ hierarchical-todo/
 │   ├── requirements.txt
 │   └── run.py
 └── frontend/
-├── src/
-├── package.json
+    ├── src/
+    ├── package.json
 └── README.md
 ```
 
