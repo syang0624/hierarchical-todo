@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import TaskItem from "./TaskItem";
 
+// Task interface defining task structure
 interface Task {
     id: number;
     title: string;
@@ -18,26 +19,28 @@ interface Task {
     depth: number;
 }
 
+// Props for the TaskList component
 interface TaskListProps {
     token: string;
 }
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000"; // Base API URL
 
 export default function TaskList({ token }: TaskListProps) {
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<Task[]>([]); // State for tasks list
     const [newTask, setNewTask] = useState({
         title: "",
         description: "",
         parent_id: null as number | null,
     });
-    const [error, setError] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null); // Error message state
+    const [successMessage, setSuccessMessage] = useState<string | null>(null); // Success message state
 
     useEffect(() => {
-        fetchTasks();
+        fetchTasks(); // Fetch tasks on component mount
     }, []);
 
+    // Fetch tasks from the server
     const fetchTasks = async () => {
         try {
             const response = await axios.get(`${API_URL}/tasks`, {
@@ -52,6 +55,7 @@ export default function TaskList({ token }: TaskListProps) {
         }
     };
 
+    // Recursively add depth property to tasks
     const addDepthToTasks = (tasks: Task[], depth: number = 0): Task[] => {
         return tasks.map((task) => ({
             ...task,
@@ -60,6 +64,7 @@ export default function TaskList({ token }: TaskListProps) {
         }));
     };
 
+    // Add a new task or subtask
     const handleAddTask = async (
         parentId: number | null = null,
         title: string,
@@ -91,6 +96,7 @@ export default function TaskList({ token }: TaskListProps) {
         }
     };
 
+    // Update an existing task
     const handleUpdateTask = async (updatedTask: Task) => {
         try {
             const response = await axios.put(
@@ -120,6 +126,7 @@ export default function TaskList({ token }: TaskListProps) {
         }
     };
 
+    // Recursive update function to modify task in the list
     const updateTasksRecursively = (
         taskList: Task[],
         id: number,
@@ -143,6 +150,7 @@ export default function TaskList({ token }: TaskListProps) {
         });
     };
 
+    // Delete a task
     const handleDeleteTask = async (taskId: number) => {
         try {
             const response = await axios.delete(`${API_URL}/tasks/${taskId}`, {
@@ -161,6 +169,7 @@ export default function TaskList({ token }: TaskListProps) {
         }
     };
 
+    // Remove task from list recursively
     const removeTaskFromList = (taskList: Task[], taskId: number): Task[] => {
         return taskList
             .filter((task) => task.id !== taskId)
@@ -170,6 +179,7 @@ export default function TaskList({ token }: TaskListProps) {
             }));
     };
 
+    // Handle drag-and-drop task reordering
     const onDragEnd = async (result: DropResult) => {
         const { destination, source, draggableId } = result;
 
@@ -193,7 +203,7 @@ export default function TaskList({ token }: TaskListProps) {
                     updatedTask.parent_id = newParentId;
                     updatedTask.depth = newParent.depth + 1;
                 } else {
-                    return; // Cannot move to a task that's already at max depth
+                    return; // Prevent moving to a task at max depth
                 }
             } else {
                 updatedTask.parent_id = null;
@@ -204,6 +214,7 @@ export default function TaskList({ token }: TaskListProps) {
         }
     };
 
+    // Find task by its ID recursively
     const findTaskById = (id: number, taskList: Task[]): Task | undefined => {
         for (const task of taskList) {
             if (task.id === id) {
@@ -219,6 +230,7 @@ export default function TaskList({ token }: TaskListProps) {
         return undefined;
     };
 
+    // Render tasks recursively
     const renderTasks = (taskList: Task[]) => {
         return taskList.map((task, index) => (
             <React.Fragment key={task.id}>

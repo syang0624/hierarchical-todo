@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 
+// Task item interface defining task structure
 interface Task {
     id: number;
     title: string;
@@ -11,6 +12,7 @@ interface Task {
     depth: number;
 }
 
+// Props for the TaskItem component
 interface TaskItemProps {
     task: Task;
     index: number;
@@ -20,6 +22,7 @@ interface TaskItemProps {
     depth: number;
 }
 
+// TaskItem component for rendering individual tasks with actions
 export default function TaskItem({
     task,
     index,
@@ -28,19 +31,21 @@ export default function TaskItem({
     onAddSubtask,
     depth,
 }: TaskItemProps) {
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedTask, setEditedTask] = useState(task);
-    const [showAddSubtask, setShowAddSubtask] = useState(false);
+    const [isEditing, setIsEditing] = useState(false); // Toggle edit mode
+    const [editedTask, setEditedTask] = useState(task); // Track task changes
+    const [showAddSubtask, setShowAddSubtask] = useState(false); // Toggle subtask form
     const [newSubtask, setNewSubtask] = useState({
         title: "",
         description: "",
     });
 
+    // Handle task update
     const handleUpdate = () => {
         onUpdate(editedTask);
         setIsEditing(false);
     };
 
+    // Handle subtask addition
     const handleAddSubtask = () => {
         if (depth < 2 && newSubtask.title.trim() !== "") {
             onAddSubtask(newSubtask.title, newSubtask.description);
@@ -60,6 +65,7 @@ export default function TaskItem({
                 >
                     {isEditing ? (
                         <div className="space-y-2">
+                            {/* Edit title input */}
                             <input
                                 type="text"
                                 value={editedTask.title}
@@ -73,6 +79,7 @@ export default function TaskItem({
                                 }
                                 className="w-full p-2 border rounded mb-2"
                             />
+                            {/* Edit description input */}
                             <input
                                 type="text"
                                 value={editedTask.description}
@@ -86,6 +93,7 @@ export default function TaskItem({
                                 }
                                 className="w-full p-2 border rounded mb-2"
                             />
+                            {/* Edit status select */}
                             <select
                                 value={editedTask.status}
                                 onChange={(
@@ -103,6 +111,7 @@ export default function TaskItem({
                                 <option value="In-Progress">In Progress</option>
                                 <option value="Completed">Completed</option>
                             </select>
+                            {/* Save and Cancel buttons */}
                             <button
                                 onClick={handleUpdate}
                                 className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mr-2"
@@ -118,6 +127,7 @@ export default function TaskItem({
                         </div>
                     ) : (
                         <div>
+                            {/* Display task details */}
                             <h3 className="text-lg font-semibold mb-2">
                                 {task.title}
                             </h3>
@@ -138,6 +148,7 @@ export default function TaskItem({
                                     {task.status}
                                 </span>
                             </p>
+                            {/* Display task depth and parent information */}
                             <p className="mb-2">Depth: {depth}</p>
                             <p className="mb-4">
                                 Parent ID:{" "}
@@ -145,6 +156,7 @@ export default function TaskItem({
                                     ? task.parent_id
                                     : "None"}
                             </p>
+                            {/* Action buttons for edit, delete, and subtask addition */}
                             <div className="space-x-2">
                                 <button
                                     onClick={() => setIsEditing(true)}
@@ -173,6 +185,7 @@ export default function TaskItem({
                             </div>
                         </div>
                     )}
+                    {/* Form for adding a subtask */}
                     {showAddSubtask && (
                         <div className="mt-4 space-y-2">
                             <input
