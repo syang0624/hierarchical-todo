@@ -28,7 +28,10 @@ hierarchical-todo/
 ## Backend Setup
 
 1. Navigate to the backend directory:
-   cd backend
+
+```
+cd backend
+```
 
 2. Create and activate a virtual environment:
 
